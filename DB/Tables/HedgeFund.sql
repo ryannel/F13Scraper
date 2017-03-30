@@ -1,0 +1,8 @@
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE Name = 'HedgeFund')
+BEGIN
+    CREATE TABLE HedgeFund(
+		HedgeFundId INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+        Name VARCHAR(255) NOT NULL UNIQUE
+    )
+END
+GO

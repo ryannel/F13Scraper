@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="596f1aab5b5a43879e49c0e8555da81f" Name="Diagram1" ZoomLevel="108">
+        <EntityTypeShape EntityType="StockScraperModel.Filing" Width="1.5" PointX="4.5" PointY="4.875" />
+        <EntityTypeShape EntityType="StockScraperModel.FormType" Width="1.5" PointX="4.5" PointY="8.5" />
+        <EntityTypeShape EntityType="StockScraperModel.HedgeFund" Width="1.5" PointX="4.5" PointY="2.375" />
+        <EntityTypeShape EntityType="StockScraperModel.MasterIndex" Width="1.5" PointX="2.625" PointY="4.875" />
+        <EntityTypeShape EntityType="StockScraperModel.Registration" Width="1.5" PointX="2.625" PointY="2.375" />
+        <EntityTypeShape EntityType="StockScraperModel.RegistrationAuthority" Width="1.875" PointX="0.5" PointY="2.375" />
+        <EntityTypeShape EntityType="StockScraperModel.Security" Width="1.5" PointX="9" PointY="3.75" />
+        <EntityTypeShape EntityType="StockScraperModel.SecurityMap" Width="1.5" PointX="11" PointY="3.75" />
+        <EntityTypeShape EntityType="StockScraperModel.Share" Width="1.5" PointX="6.625" PointY="3.75" />
+        <EntityTypeShape EntityType="StockScraperModel.UnknownShare" Width="1.5" PointX="6.625" PointY="6.625" />
+        <AssociationConnector Association="StockScraperModel.Filing_FormType" />
+        <AssociationConnector Association="StockScraperModel.Filing_HedgeFund" />
+        <AssociationConnector Association="StockScraperModel.Filing_MasterIndex" />
+        <AssociationConnector Association="StockScraperModel.Share_Filing" />
+        <AssociationConnector Association="StockScraperModel.UnknownShare_Filing" />
+        <AssociationConnector Association="StockScraperModel.Registration_HedgeFund" />
+        <AssociationConnector Association="StockScraperModel.Registration_RegistrationAuthority" />
+        <AssociationConnector Association="StockScraperModel.SecurityMap_Security" />
+        <AssociationConnector Association="StockScraperModel.Share_Security" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,651 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="StockScraperModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Filing">
+          <Key>
+            <PropertyRef Name="FilingId" />
+          </Key>
+          <Property Name="FilingId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="HedgeFundId" Type="int" Nullable="false" />
+          <Property Name="FormTypeId" Type="int" Nullable="false" />
+          <Property Name="MasterIndexId" Type="int" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="Url" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FormType">
+          <Key>
+            <PropertyRef Name="FormTypeId" />
+          </Key>
+          <Property Name="FormTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="HedgeFund">
+          <Key>
+            <PropertyRef Name="HedgeFundId" />
+          </Key>
+          <Property Name="HedgeFundId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MasterIndex">
+          <Key>
+            <PropertyRef Name="MasterIndexId" />
+          </Key>
+          <Property Name="MasterIndexId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Url" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Registration">
+          <Key>
+            <PropertyRef Name="RegistrationId" />
+          </Key>
+          <Property Name="RegistrationId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="HedgeFundId" Type="int" Nullable="false" />
+          <Property Name="RegistrationAuthorityId" Type="int" Nullable="false" />
+          <Property Name="Identifier" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RegistrationAuthority">
+          <Key>
+            <PropertyRef Name="RegistrationAuthorityId" />
+          </Key>
+          <Property Name="RegistrationAuthorityId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Security">
+          <Key>
+            <PropertyRef Name="SecurityId" />
+          </Key>
+          <Property Name="SecurityId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Symbol" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Exchange" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SecurityMap">
+          <Key>
+            <PropertyRef Name="SecurityMapId" />
+          </Key>
+          <Property Name="SecurityMapId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Cusip" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="SecurityId" Type="int" />
+        </EntityType>
+        <EntityType Name="Share">
+          <Key>
+            <PropertyRef Name="ShareId" />
+          </Key>
+          <Property Name="ShareId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FilingId" Type="int" Nullable="false" />
+          <Property Name="SecurityId" Type="int" Nullable="false" />
+          <Property Name="Number" Type="int" Nullable="false" />
+          <Property Name="Type" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Value" Type="decimal" Precision="32" Scale="4" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UnknownShare">
+          <Key>
+            <PropertyRef Name="UnknownShareId" />
+          </Key>
+          <Property Name="UnknownShareId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FilingId" Type="int" Nullable="false" />
+          <Property Name="Number" Type="int" Nullable="false" />
+          <Property Name="Type" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Value" Type="decimal" Precision="32" Scale="4" Nullable="false" />
+          <Property Name="NameOfIssuer" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Cusip" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <Association Name="Filing_FormType">
+          <End Role="FormType" Type="Self.FormType" Multiplicity="1" />
+          <End Role="Filing" Type="Self.Filing" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FormType">
+              <PropertyRef Name="FormTypeId" />
+            </Principal>
+            <Dependent Role="Filing">
+              <PropertyRef Name="FormTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Filing_HedgeFund">
+          <End Role="HedgeFund" Type="Self.HedgeFund" Multiplicity="1" />
+          <End Role="Filing" Type="Self.Filing" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HedgeFund">
+              <PropertyRef Name="HedgeFundId" />
+            </Principal>
+            <Dependent Role="Filing">
+              <PropertyRef Name="HedgeFundId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Filing_MasterIndex">
+          <End Role="MasterIndex" Type="Self.MasterIndex" Multiplicity="1" />
+          <End Role="Filing" Type="Self.Filing" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MasterIndex">
+              <PropertyRef Name="MasterIndexId" />
+            </Principal>
+            <Dependent Role="Filing">
+              <PropertyRef Name="MasterIndexId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Registration_HedgeFund">
+          <End Role="HedgeFund" Type="Self.HedgeFund" Multiplicity="1" />
+          <End Role="Registration" Type="Self.Registration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HedgeFund">
+              <PropertyRef Name="HedgeFundId" />
+            </Principal>
+            <Dependent Role="Registration">
+              <PropertyRef Name="HedgeFundId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Registration_RegistrationAuthority">
+          <End Role="RegistrationAuthority" Type="Self.RegistrationAuthority" Multiplicity="1" />
+          <End Role="Registration" Type="Self.Registration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RegistrationAuthority">
+              <PropertyRef Name="RegistrationAuthorityId" />
+            </Principal>
+            <Dependent Role="Registration">
+              <PropertyRef Name="RegistrationAuthorityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="SecurityMap_Security">
+          <End Role="Security" Type="Self.Security" Multiplicity="0..1" />
+          <End Role="SecurityMap" Type="Self.SecurityMap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Security">
+              <PropertyRef Name="SecurityId" />
+            </Principal>
+            <Dependent Role="SecurityMap">
+              <PropertyRef Name="SecurityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Share_Filing">
+          <End Role="Filing" Type="Self.Filing" Multiplicity="1" />
+          <End Role="Share" Type="Self.Share" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Filing">
+              <PropertyRef Name="FilingId" />
+            </Principal>
+            <Dependent Role="Share">
+              <PropertyRef Name="FilingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Share_Security">
+          <End Role="Security" Type="Self.Security" Multiplicity="1" />
+          <End Role="Share" Type="Self.Share" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Security">
+              <PropertyRef Name="SecurityId" />
+            </Principal>
+            <Dependent Role="Share">
+              <PropertyRef Name="SecurityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="UnknownShare_Filing">
+          <End Role="Filing" Type="Self.Filing" Multiplicity="1" />
+          <End Role="UnknownShare" Type="Self.UnknownShare" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Filing">
+              <PropertyRef Name="FilingId" />
+            </Principal>
+            <Dependent Role="UnknownShare">
+              <PropertyRef Name="FilingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="StockScraperModelStoreContainer">
+          <EntitySet Name="Filing" EntityType="Self.Filing" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FormType" EntityType="Self.FormType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="HedgeFund" EntityType="Self.HedgeFund" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MasterIndex" EntityType="Self.MasterIndex" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Registration" EntityType="Self.Registration" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RegistrationAuthority" EntityType="Self.RegistrationAuthority" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Security" EntityType="Self.Security" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SecurityMap" EntityType="Self.SecurityMap" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Share" EntityType="Self.Share" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UnknownShare" EntityType="Self.UnknownShare" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="Filing_FormType" Association="Self.Filing_FormType">
+            <End Role="FormType" EntitySet="FormType" />
+            <End Role="Filing" EntitySet="Filing" />
+          </AssociationSet>
+          <AssociationSet Name="Filing_HedgeFund" Association="Self.Filing_HedgeFund">
+            <End Role="HedgeFund" EntitySet="HedgeFund" />
+            <End Role="Filing" EntitySet="Filing" />
+          </AssociationSet>
+          <AssociationSet Name="Filing_MasterIndex" Association="Self.Filing_MasterIndex">
+            <End Role="MasterIndex" EntitySet="MasterIndex" />
+            <End Role="Filing" EntitySet="Filing" />
+          </AssociationSet>
+          <AssociationSet Name="Registration_HedgeFund" Association="Self.Registration_HedgeFund">
+            <End Role="HedgeFund" EntitySet="HedgeFund" />
+            <End Role="Registration" EntitySet="Registration" />
+          </AssociationSet>
+          <AssociationSet Name="Registration_RegistrationAuthority" Association="Self.Registration_RegistrationAuthority">
+            <End Role="RegistrationAuthority" EntitySet="RegistrationAuthority" />
+            <End Role="Registration" EntitySet="Registration" />
+          </AssociationSet>
+          <AssociationSet Name="SecurityMap_Security" Association="Self.SecurityMap_Security">
+            <End Role="Security" EntitySet="Security" />
+            <End Role="SecurityMap" EntitySet="SecurityMap" />
+          </AssociationSet>
+          <AssociationSet Name="Share_Filing" Association="Self.Share_Filing">
+            <End Role="Filing" EntitySet="Filing" />
+            <End Role="Share" EntitySet="Share" />
+          </AssociationSet>
+          <AssociationSet Name="Share_Security" Association="Self.Share_Security">
+            <End Role="Security" EntitySet="Security" />
+            <End Role="Share" EntitySet="Share" />
+          </AssociationSet>
+          <AssociationSet Name="UnknownShare_Filing" Association="Self.UnknownShare_Filing">
+            <End Role="Filing" EntitySet="Filing" />
+            <End Role="UnknownShare" EntitySet="UnknownShare" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="StockScraperModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="StockScraperEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Filings" EntityType="StockScraperModel.Filing" />
+          <EntitySet Name="FormTypes" EntityType="StockScraperModel.FormType" />
+          <EntitySet Name="HedgeFunds" EntityType="StockScraperModel.HedgeFund" />
+          <EntitySet Name="MasterIndexes" EntityType="StockScraperModel.MasterIndex" />
+          <EntitySet Name="Registrations" EntityType="StockScraperModel.Registration" />
+          <EntitySet Name="RegistrationAuthorities" EntityType="StockScraperModel.RegistrationAuthority" />
+          <EntitySet Name="Securities" EntityType="StockScraperModel.Security" />
+          <EntitySet Name="SecurityMaps" EntityType="StockScraperModel.SecurityMap" />
+          <EntitySet Name="Shares" EntityType="StockScraperModel.Share" />
+          <EntitySet Name="UnknownShares" EntityType="StockScraperModel.UnknownShare" />
+          <AssociationSet Name="Filing_FormType" Association="StockScraperModel.Filing_FormType">
+            <End Role="FormType" EntitySet="FormTypes" />
+            <End Role="Filing" EntitySet="Filings" />
+          </AssociationSet>
+          <AssociationSet Name="Filing_HedgeFund" Association="StockScraperModel.Filing_HedgeFund">
+            <End Role="HedgeFund" EntitySet="HedgeFunds" />
+            <End Role="Filing" EntitySet="Filings" />
+          </AssociationSet>
+          <AssociationSet Name="Filing_MasterIndex" Association="StockScraperModel.Filing_MasterIndex">
+            <End Role="MasterIndex" EntitySet="MasterIndexes" />
+            <End Role="Filing" EntitySet="Filings" />
+          </AssociationSet>
+          <AssociationSet Name="Share_Filing" Association="StockScraperModel.Share_Filing">
+            <End Role="Filing" EntitySet="Filings" />
+            <End Role="Share" EntitySet="Shares" />
+          </AssociationSet>
+          <AssociationSet Name="UnknownShare_Filing" Association="StockScraperModel.UnknownShare_Filing">
+            <End Role="Filing" EntitySet="Filings" />
+            <End Role="UnknownShare" EntitySet="UnknownShares" />
+          </AssociationSet>
+          <AssociationSet Name="Registration_HedgeFund" Association="StockScraperModel.Registration_HedgeFund">
+            <End Role="HedgeFund" EntitySet="HedgeFunds" />
+            <End Role="Registration" EntitySet="Registrations" />
+          </AssociationSet>
+          <AssociationSet Name="Registration_RegistrationAuthority" Association="StockScraperModel.Registration_RegistrationAuthority">
+            <End Role="RegistrationAuthority" EntitySet="RegistrationAuthorities" />
+            <End Role="Registration" EntitySet="Registrations" />
+          </AssociationSet>
+          <AssociationSet Name="SecurityMap_Security" Association="StockScraperModel.SecurityMap_Security">
+            <End Role="Security" EntitySet="Securities" />
+            <End Role="SecurityMap" EntitySet="SecurityMaps" />
+          </AssociationSet>
+          <AssociationSet Name="Share_Security" Association="StockScraperModel.Share_Security">
+            <End Role="Security" EntitySet="Securities" />
+            <End Role="Share" EntitySet="Shares" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Filing">
+          <Key>
+            <PropertyRef Name="FilingId" />
+          </Key>
+          <Property Name="FilingId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="HedgeFundId" Type="Int32" Nullable="false" />
+          <Property Name="FormTypeId" Type="Int32" Nullable="false" />
+          <Property Name="MasterIndexId" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Url" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="FormType" Relationship="StockScraperModel.Filing_FormType" FromRole="Filing" ToRole="FormType" />
+          <NavigationProperty Name="HedgeFund" Relationship="StockScraperModel.Filing_HedgeFund" FromRole="Filing" ToRole="HedgeFund" />
+          <NavigationProperty Name="MasterIndex" Relationship="StockScraperModel.Filing_MasterIndex" FromRole="Filing" ToRole="MasterIndex" />
+          <NavigationProperty Name="Shares" Relationship="StockScraperModel.Share_Filing" FromRole="Filing" ToRole="Share" />
+          <NavigationProperty Name="UnknownShares" Relationship="StockScraperModel.UnknownShare_Filing" FromRole="Filing" ToRole="UnknownShare" />
+        </EntityType>
+        <EntityType Name="FormType">
+          <Key>
+            <PropertyRef Name="FormTypeId" />
+          </Key>
+          <Property Name="FormTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Filings" Relationship="StockScraperModel.Filing_FormType" FromRole="FormType" ToRole="Filing" />
+        </EntityType>
+        <EntityType Name="HedgeFund">
+          <Key>
+            <PropertyRef Name="HedgeFundId" />
+          </Key>
+          <Property Name="HedgeFundId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Filings" Relationship="StockScraperModel.Filing_HedgeFund" FromRole="HedgeFund" ToRole="Filing" />
+          <NavigationProperty Name="Registrations" Relationship="StockScraperModel.Registration_HedgeFund" FromRole="HedgeFund" ToRole="Registration" />
+        </EntityType>
+        <EntityType Name="MasterIndex">
+          <Key>
+            <PropertyRef Name="MasterIndexId" />
+          </Key>
+          <Property Name="MasterIndexId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Url" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Filings" Relationship="StockScraperModel.Filing_MasterIndex" FromRole="MasterIndex" ToRole="Filing" />
+        </EntityType>
+        <EntityType Name="Registration">
+          <Key>
+            <PropertyRef Name="RegistrationId" />
+          </Key>
+          <Property Name="RegistrationId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="HedgeFundId" Type="Int32" Nullable="false" />
+          <Property Name="RegistrationAuthorityId" Type="Int32" Nullable="false" />
+          <Property Name="Identifier" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="HedgeFund" Relationship="StockScraperModel.Registration_HedgeFund" FromRole="Registration" ToRole="HedgeFund" />
+          <NavigationProperty Name="RegistrationAuthority" Relationship="StockScraperModel.Registration_RegistrationAuthority" FromRole="Registration" ToRole="RegistrationAuthority" />
+        </EntityType>
+        <EntityType Name="RegistrationAuthority">
+          <Key>
+            <PropertyRef Name="RegistrationAuthorityId" />
+          </Key>
+          <Property Name="RegistrationAuthorityId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Registrations" Relationship="StockScraperModel.Registration_RegistrationAuthority" FromRole="RegistrationAuthority" ToRole="Registration" />
+        </EntityType>
+        <EntityType Name="Security">
+          <Key>
+            <PropertyRef Name="SecurityId" />
+          </Key>
+          <Property Name="SecurityId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Symbol" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Exchange" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="SecurityMaps" Relationship="StockScraperModel.SecurityMap_Security" FromRole="Security" ToRole="SecurityMap" />
+          <NavigationProperty Name="Shares" Relationship="StockScraperModel.Share_Security" FromRole="Security" ToRole="Share" />
+        </EntityType>
+        <EntityType Name="SecurityMap">
+          <Key>
+            <PropertyRef Name="SecurityMapId" />
+          </Key>
+          <Property Name="SecurityMapId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Cusip" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="SecurityId" Type="Int32" />
+          <NavigationProperty Name="Security" Relationship="StockScraperModel.SecurityMap_Security" FromRole="SecurityMap" ToRole="Security" />
+        </EntityType>
+        <EntityType Name="Share">
+          <Key>
+            <PropertyRef Name="ShareId" />
+          </Key>
+          <Property Name="ShareId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FilingId" Type="Int32" Nullable="false" />
+          <Property Name="SecurityId" Type="Int32" Nullable="false" />
+          <Property Name="Number" Type="Int32" Nullable="false" />
+          <Property Name="Type" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Value" Type="Decimal" Nullable="false" Precision="32" Scale="4" />
+          <NavigationProperty Name="Filing" Relationship="StockScraperModel.Share_Filing" FromRole="Share" ToRole="Filing" />
+          <NavigationProperty Name="Security" Relationship="StockScraperModel.Share_Security" FromRole="Share" ToRole="Security" />
+        </EntityType>
+        <EntityType Name="UnknownShare">
+          <Key>
+            <PropertyRef Name="UnknownShareId" />
+          </Key>
+          <Property Name="UnknownShareId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FilingId" Type="Int32" Nullable="false" />
+          <Property Name="Number" Type="Int32" Nullable="false" />
+          <Property Name="Type" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Value" Type="Decimal" Nullable="false" Precision="32" Scale="4" />
+          <Property Name="NameOfIssuer" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Cusip" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Filing" Relationship="StockScraperModel.UnknownShare_Filing" FromRole="UnknownShare" ToRole="Filing" />
+        </EntityType>
+        <Association Name="Filing_FormType">
+          <End Type="StockScraperModel.FormType" Role="FormType" Multiplicity="1" />
+          <End Type="StockScraperModel.Filing" Role="Filing" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FormType">
+              <PropertyRef Name="FormTypeId" />
+            </Principal>
+            <Dependent Role="Filing">
+              <PropertyRef Name="FormTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Filing_HedgeFund">
+          <End Type="StockScraperModel.HedgeFund" Role="HedgeFund" Multiplicity="1" />
+          <End Type="StockScraperModel.Filing" Role="Filing" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HedgeFund">
+              <PropertyRef Name="HedgeFundId" />
+            </Principal>
+            <Dependent Role="Filing">
+              <PropertyRef Name="HedgeFundId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Filing_MasterIndex">
+          <End Type="StockScraperModel.MasterIndex" Role="MasterIndex" Multiplicity="1" />
+          <End Type="StockScraperModel.Filing" Role="Filing" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MasterIndex">
+              <PropertyRef Name="MasterIndexId" />
+            </Principal>
+            <Dependent Role="Filing">
+              <PropertyRef Name="MasterIndexId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Share_Filing">
+          <End Type="StockScraperModel.Filing" Role="Filing" Multiplicity="1" />
+          <End Type="StockScraperModel.Share" Role="Share" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Filing">
+              <PropertyRef Name="FilingId" />
+            </Principal>
+            <Dependent Role="Share">
+              <PropertyRef Name="FilingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="UnknownShare_Filing">
+          <End Type="StockScraperModel.Filing" Role="Filing" Multiplicity="1" />
+          <End Type="StockScraperModel.UnknownShare" Role="UnknownShare" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Filing">
+              <PropertyRef Name="FilingId" />
+            </Principal>
+            <Dependent Role="UnknownShare">
+              <PropertyRef Name="FilingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Registration_HedgeFund">
+          <End Type="StockScraperModel.HedgeFund" Role="HedgeFund" Multiplicity="1" />
+          <End Type="StockScraperModel.Registration" Role="Registration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HedgeFund">
+              <PropertyRef Name="HedgeFundId" />
+            </Principal>
+            <Dependent Role="Registration">
+              <PropertyRef Name="HedgeFundId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Registration_RegistrationAuthority">
+          <End Type="StockScraperModel.RegistrationAuthority" Role="RegistrationAuthority" Multiplicity="1" />
+          <End Type="StockScraperModel.Registration" Role="Registration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RegistrationAuthority">
+              <PropertyRef Name="RegistrationAuthorityId" />
+            </Principal>
+            <Dependent Role="Registration">
+              <PropertyRef Name="RegistrationAuthorityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="SecurityMap_Security">
+          <End Type="StockScraperModel.Security" Role="Security" Multiplicity="0..1" />
+          <End Type="StockScraperModel.SecurityMap" Role="SecurityMap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Security">
+              <PropertyRef Name="SecurityId" />
+            </Principal>
+            <Dependent Role="SecurityMap">
+              <PropertyRef Name="SecurityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Share_Security">
+          <End Type="StockScraperModel.Security" Role="Security" Multiplicity="1" />
+          <End Type="StockScraperModel.Share" Role="Share" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Security">
+              <PropertyRef Name="SecurityId" />
+            </Principal>
+            <Dependent Role="Share">
+              <PropertyRef Name="SecurityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="StockScraperModelStoreContainer" CdmEntityContainer="StockScraperEntities">
+          <EntitySetMapping Name="Filings">
+            <EntityTypeMapping TypeName="StockScraperModel.Filing">
+              <MappingFragment StoreEntitySet="Filing">
+                <ScalarProperty Name="Url" ColumnName="Url" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="MasterIndexId" ColumnName="MasterIndexId" />
+                <ScalarProperty Name="FormTypeId" ColumnName="FormTypeId" />
+                <ScalarProperty Name="HedgeFundId" ColumnName="HedgeFundId" />
+                <ScalarProperty Name="FilingId" ColumnName="FilingId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FormTypes">
+            <EntityTypeMapping TypeName="StockScraperModel.FormType">
+              <MappingFragment StoreEntitySet="FormType">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="FormTypeId" ColumnName="FormTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="HedgeFunds">
+            <EntityTypeMapping TypeName="StockScraperModel.HedgeFund">
+              <MappingFragment StoreEntitySet="HedgeFund">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="HedgeFundId" ColumnName="HedgeFundId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MasterIndexes">
+            <EntityTypeMapping TypeName="StockScraperModel.MasterIndex">
+              <MappingFragment StoreEntitySet="MasterIndex">
+                <ScalarProperty Name="Url" ColumnName="Url" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="MasterIndexId" ColumnName="MasterIndexId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Registrations">
+            <EntityTypeMapping TypeName="StockScraperModel.Registration">
+              <MappingFragment StoreEntitySet="Registration">
+                <ScalarProperty Name="Identifier" ColumnName="Identifier" />
+                <ScalarProperty Name="RegistrationAuthorityId" ColumnName="RegistrationAuthorityId" />
+                <ScalarProperty Name="HedgeFundId" ColumnName="HedgeFundId" />
+                <ScalarProperty Name="RegistrationId" ColumnName="RegistrationId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RegistrationAuthorities">
+            <EntityTypeMapping TypeName="StockScraperModel.RegistrationAuthority">
+              <MappingFragment StoreEntitySet="RegistrationAuthority">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="RegistrationAuthorityId" ColumnName="RegistrationAuthorityId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Securities">
+            <EntityTypeMapping TypeName="StockScraperModel.Security">
+              <MappingFragment StoreEntitySet="Security">
+                <ScalarProperty Name="Exchange" ColumnName="Exchange" />
+                <ScalarProperty Name="Symbol" ColumnName="Symbol" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="SecurityId" ColumnName="SecurityId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SecurityMaps">
+            <EntityTypeMapping TypeName="StockScraperModel.SecurityMap">
+              <MappingFragment StoreEntitySet="SecurityMap">
+                <ScalarProperty Name="SecurityId" ColumnName="SecurityId" />
+                <ScalarProperty Name="Cusip" ColumnName="Cusip" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="SecurityMapId" ColumnName="SecurityMapId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Shares">
+            <EntityTypeMapping TypeName="StockScraperModel.Share">
+              <MappingFragment StoreEntitySet="Share">
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="SecurityId" ColumnName="SecurityId" />
+                <ScalarProperty Name="FilingId" ColumnName="FilingId" />
+                <ScalarProperty Name="ShareId" ColumnName="ShareId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UnknownShares">
+            <EntityTypeMapping TypeName="StockScraperModel.UnknownShare">
+              <MappingFragment StoreEntitySet="UnknownShare">
+                <ScalarProperty Name="Cusip" ColumnName="Cusip" />
+                <ScalarProperty Name="NameOfIssuer" ColumnName="NameOfIssuer" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="FilingId" ColumnName="FilingId" />
+                <ScalarProperty Name="UnknownShareId" ColumnName="UnknownShareId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

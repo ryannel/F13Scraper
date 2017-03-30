@@ -1,0 +1,9 @@
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE Name = 'MasterIndex')
+BEGIN
+    CREATE TABLE MasterIndex(
+		MasterIndexId INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+        Name VARCHAR(255) NOT NULL UNIQUE,
+        Url VARCHAR(255) NOT NULL,
+    )
+END
+GO
