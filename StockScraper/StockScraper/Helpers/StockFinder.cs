@@ -20,13 +20,22 @@ namespace StockScraper.Helpers
                 security = FidelitySearch(cusip);
             }
 
-            return security;
+            return security != null ? NameLookup($"{security.Exchange}:{security.Symbol}") : null;
         }
 
         public static Security NameLookup(string name)
         {
             Console.WriteLine($"Searching for {name} on Google Finance.");
-            return WebSearch.GoogleFinance.SearchByName(name);
+            Security security = WebSearch.GoogleFinance.Api.SecuritySearch(name);
+
+            if (security?.Symbol != null && (security.Sector == null || security.Industry == null))
+            {
+                Security yahooSecurity = WebSearch.YahooFinance.Api.SecuritySearch(security.Symbol);
+                if (yahooSecurity.Industry != null) security.Industry = yahooSecurity.Industry;
+                if (yahooSecurity.Sector != null) security.Sector = yahooSecurity.Sector;
+            }
+
+            return security;
         }
 
         private static Security FidelitySearch(string cusip)

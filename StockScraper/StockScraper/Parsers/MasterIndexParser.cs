@@ -22,27 +22,33 @@ namespace StockScraper.Parsers
 
         private MasterIndex AddMasterIndex(string url)
         {
-            string[] splitUrl = url.Split('/');
-
             MasterIndex masterIndex = _db.MasterIndexes.FirstOrDefault(m => m.Url == url);
-            if (masterIndex != null)
+
+            if (masterIndex == null)
+            {
+                masterIndex = GetMasterIndexFromUrl(url);
+                Console.WriteLine($"Adding new MasterIndex for {masterIndex.Name}");
+
+                _db.MasterIndexes.Add(masterIndex);
+                _db.SaveChanges();
+            }
+            else
             {
                 Console.WriteLine($"MasterIndex {masterIndex.Name} already exists, continuing.");
-                return masterIndex;
             }
-            
-            masterIndex = new MasterIndex()
+
+            return masterIndex;
+        }
+
+        private MasterIndex GetMasterIndexFromUrl(string url)
+        {
+            string[] splitUrl = url.Split('/');
+
+            return new MasterIndex()
             {
                 Name = $"{splitUrl[6]} - {splitUrl[7]}",
                 Url = url
             };
-
-            Console.WriteLine($"Adding new MasterIndex for {masterIndex.Name}");
-
-            _db.MasterIndexes.Add(masterIndex);
-            _db.SaveChanges();
-
-            return masterIndex;
         }
 
         private void ParseMasterIndexStream(int masterIndexId, Stream mainIndexStream)
@@ -64,7 +70,7 @@ namespace StockScraper.Parsers
                 if (line.Contains("13F-HR"))
                 {
                     var indexEntry = new MasterIndexEntry(masterIndexId, line);
-                    new MasterIndexRowParser().Parse(masterIndexId, indexEntry);
+                    new MasterIndexRowParser().Parse(indexEntry);
                 }
             }
 

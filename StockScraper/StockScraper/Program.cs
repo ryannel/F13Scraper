@@ -32,7 +32,6 @@ namespace StockScraper
             Console.WriteLine("App ended at: " + endTime.ToString("dd/MM/yyyy h:mm tt"));
             Console.WriteLine("Total runtime: " + endTime.Subtract(startTime).ToString());
             Console.WriteLine("");
-            //Console.WriteLine("Total HedgeFunds processed : " + db.HedgeFunds.Count());
 
             Console.ReadKey();
         }

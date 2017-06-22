@@ -60,8 +60,10 @@
           </Key>
           <Property Name="SecurityId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="255" Nullable="false" />
-          <Property Name="Symbol" Type="varchar" MaxLength="10" Nullable="false" />
-          <Property Name="Exchange" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Symbol" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="Exchange" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="Sector" Type="varchar" MaxLength="255" />
+          <Property Name="Industry" Type="varchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="SecurityMap">
           <Key>
@@ -94,6 +96,7 @@
           <Property Name="Value" Type="decimal" Precision="32" Scale="4" Nullable="false" />
           <Property Name="NameOfIssuer" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="Cusip" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="SecurityId" Type="int" />
         </EntityType>
         <Association Name="Filing_FormType">
           <End Role="FormType" Type="Self.FormType" Multiplicity="1" />
@@ -370,10 +373,12 @@
           </Key>
           <Property Name="SecurityId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Symbol" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="Exchange" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Symbol" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="Exchange" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="SecurityMaps" Relationship="StockScraperModel.SecurityMap_Security" FromRole="Security" ToRole="SecurityMap" />
           <NavigationProperty Name="Shares" Relationship="StockScraperModel.Share_Security" FromRole="Security" ToRole="Share" />
+          <Property Name="Sector" Type="String" Nullable="true" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Industry" Type="String" Nullable="true" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="SecurityMap">
           <Key>
@@ -410,6 +415,7 @@
           <Property Name="NameOfIssuer" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="Cusip" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Filing" Relationship="StockScraperModel.UnknownShare_Filing" FromRole="UnknownShare" ToRole="Filing" />
+          <Property Name="SecurityId" Type="Int32" />
         </EntityType>
         <Association Name="Filing_FormType">
           <End Type="StockScraperModel.FormType" Role="FormType" Multiplicity="1" />
@@ -583,6 +589,8 @@
           <EntitySetMapping Name="Securities">
             <EntityTypeMapping TypeName="StockScraperModel.Security">
               <MappingFragment StoreEntitySet="Security">
+                <ScalarProperty Name="Industry" ColumnName="Industry" />
+                <ScalarProperty Name="Sector" ColumnName="Sector" />
                 <ScalarProperty Name="Exchange" ColumnName="Exchange" />
                 <ScalarProperty Name="Symbol" ColumnName="Symbol" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -615,6 +623,7 @@
           <EntitySetMapping Name="UnknownShares">
             <EntityTypeMapping TypeName="StockScraperModel.UnknownShare">
               <MappingFragment StoreEntitySet="UnknownShare">
+                <ScalarProperty Name="SecurityId" ColumnName="SecurityId" />
                 <ScalarProperty Name="Cusip" ColumnName="Cusip" />
                 <ScalarProperty Name="NameOfIssuer" ColumnName="NameOfIssuer" />
                 <ScalarProperty Name="Value" ColumnName="Value" />

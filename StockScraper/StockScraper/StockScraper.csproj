@@ -79,6 +79,7 @@
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -90,8 +91,15 @@
     <Compile Include="Helpers\SecurityHelper.cs" />
     <Compile Include="Helpers\StockFinder.cs" />
     <Compile Include="Helpers\WebSearch\Fidelity.cs" />
-    <Compile Include="Helpers\WebSearch\GoogleFinance.cs" />
+    <Compile Include="Helpers\WebSearch\GoogleFinance\Api.cs" />
+    <Compile Include="Helpers\WebSearch\GoogleFinance\Pages\Financials.cs" />
+    <Compile Include="Helpers\WebSearch\GoogleFinance\Pages\Summary.cs" />
+    <Compile Include="Helpers\WebSearch\GoogleFinance\Util.cs" />
     <Compile Include="Helpers\WebSearch\Vanguard.cs" />
+    <Compile Include="Helpers\WebSearch\YahooFinance\Api.cs" />
+    <Compile Include="Helpers\WebSearch\YahooFinance\JsonApi\SummaryResponse.cs" />
+    <Compile Include="Helpers\WebSearch\YahooFinance\Pages\Summary.cs" />
+    <Compile Include="Helpers\WebSearch\YahooFinance\Util.cs" />
     <Compile Include="Models\Filing.cs">
       <DependentUpon>StockScraperEntities.tt</DependentUpon>
     </Compile>
@@ -144,6 +152,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\Ftp.cs" />
+    <Compile Include="Utils\PersistantWebClient.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Utils\StockScraperEntitiesContext.cs" />
     <Compile Include="Utils\StreamUtil.cs" />
   </ItemGroup>
@@ -186,6 +197,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

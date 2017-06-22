@@ -8,6 +8,7 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using StockScraper.Utils;
 
 namespace StockScraper.Helpers.WebSearch
 {
@@ -57,19 +58,28 @@ namespace StockScraper.Helpers.WebSearch
 
         private static Result GetJson(string url)
         {
-            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-            httpWebRequest.Method = WebRequestMethods.Http.Get;
-            httpWebRequest.Accept = "application/json";
+            //HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            //httpWebRequest.Method = WebRequestMethods.Http.Get;
+            //httpWebRequest.Accept = "application/json";
 
-            var response = (HttpWebResponse)httpWebRequest.GetResponse();
+            //var response = (HttpWebResponse)httpWebRequest.GetResponse();
 
-            StreamReader streamReader = new StreamReader(response.GetResponseStream());
-            String responseData = streamReader.ReadToEnd();
+            //StreamReader streamReader = new StreamReader(response.GetResponseStream());
+            //String responseData = streamReader.ReadToEnd();
 
-            responseData = responseData.Replace("callback(", String.Empty);
-            responseData = responseData.Replace("})", "}");
+            //responseData = responseData.Replace("callback(", String.Empty);
+            //responseData = responseData.Replace("})", "}");
 
-            return JsonConvert.DeserializeObject<RootObject>(responseData).Results[0];
+            //return JsonConvert.DeserializeObject<RootObject>(responseData).Results[0];
+
+            using (var webClient = new PersistantWebClient())
+            {
+                string responseData = webClient.DownloadString(url);
+                responseData = responseData.Replace("callback(", String.Empty);
+                responseData = responseData.Replace("})", "}");
+                RootObject json = JsonConvert.DeserializeObject<RootObject>(responseData);
+                return json.Results[0];
+            }
         }
 
         private static Security GetStockDetailsFromResultPage(string cusip)
@@ -86,6 +96,8 @@ namespace StockScraper.Helpers.WebSearch
             security.Symbol = security.Symbol.Replace("_pd", "");
             security.Symbol = security.Symbol.Replace("_t", "");
             security.Symbol = security.Symbol.Replace("_p", "");
+
+            if (security.Symbol.EndsWith("a")) security.Symbol = security.Symbol.Substring(0, security.Symbol.Length - 1) + ".A";
 
             security.Exchange = security.Exchange.Replace("NASDOTCBULLETINBOARDMARKET", "OTCBB");
             security.Exchange = security.Exchange.Replace("BATSEXCHANGE", "BZX");

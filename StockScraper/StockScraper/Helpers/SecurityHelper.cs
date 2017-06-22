@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Globalization;
 using StockScraper.Models;
 using StockScraper.Parsers;
@@ -52,7 +51,7 @@ namespace StockScraper.Helpers
             return security;
         }
 
-        public SecurityMap GenerateSecurityMap(Security security, string cusip)
+        public SecurityMap SaveSecurityMap(Security security, string cusip)
         {
             SecurityMap securityMap;
 
@@ -66,17 +65,19 @@ namespace StockScraper.Helpers
                 };
 
                 _db.SecurityMaps.Add(securityMap);
+
                 _db.SaveChanges();
             }
             catch
             {
                 securityMap = _db.SecurityMaps.FirstOrDefault(s => s.Cusip == cusip);
+                if (securityMap == null) throw;
             }
 
             return securityMap;
         }
 
-        public Security AddSecurity(Security security)
+        public Security SaveSecurity(Security security)
         {
             if (security == null) return null;
 
@@ -87,7 +88,9 @@ namespace StockScraper.Helpers
             }
             catch
             {
+                _db.Entry(security).State = EntityState.Detached;
                 security = _db.Securities.FirstOrDefault(s => s.Symbol == security.Symbol && s.Exchange == security.Exchange);
+                if (security == null) throw;
             }
 
             return security;
@@ -112,11 +115,13 @@ namespace StockScraper.Helpers
             return sb.ToString();
         }
 
-        public void AddUnknownShare(InfoTableItem infoTableItem, Filing filing)
+        public void AddUnknownShare(InfoTableItem infoTableItem, int filingId)
         {
+            Console.WriteLine($"Unable to find security for {infoTableItem.NameOfIssuer}");
+
             var unknownShare = new UnknownShare
             {
-                FilingId = filing.FilingId,
+                FilingId = filingId,
                 Number = infoTableItem.NumberOfShares,
                 Type = infoTableItem.TypeOfShares,
                 Value = infoTableItem.Value,

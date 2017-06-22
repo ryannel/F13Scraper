@@ -25,6 +25,8 @@ namespace StockScraper.Models
         public string Name { get; set; }
         public string Symbol { get; set; }
         public string Exchange { get; set; }
+        public string Sector { get; set; }
+        public string Industry { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SecurityMap> SecurityMaps { get; set; }

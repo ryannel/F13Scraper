@@ -21,6 +21,7 @@ namespace StockScraper.Models
         public decimal Value { get; set; }
         public string NameOfIssuer { get; set; }
         public string Cusip { get; set; }
+        public Nullable<int> SecurityId { get; set; }
     
         public virtual Filing Filing { get; set; }
     }

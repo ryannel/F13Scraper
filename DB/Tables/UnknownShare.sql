@@ -7,7 +7,7 @@ BEGIN
         Type VARCHAR(255) NOT NULL,
         Value DECIMAL(32, 4) NOT NULL,
         NameOfIssuer VARCHAR(255) NOT NULL,
-        Cusip VARCHAR(255) NOT NULL UNIQUE,
+        Cusip VARCHAR(255) NOT NULL,
         SecurityId INT,
         CONSTRAINT UnknownShare_Filing FOREIGN KEY (FilingId) REFERENCES Filing(FilingId)
     )

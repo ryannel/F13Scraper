@@ -18,4 +18,3 @@ DBCC CHECKIDENT ('[Share]', RESEED, 0);
 DBCC CHECKIDENT ('[HedgeFund]', RESEED, 0);
 DBCC CHECKIDENT ('[Filing]', RESEED, 0);
 DBCC CHECKIDENT ('[MasterIndex]', RESEED, 0);
-

@@ -121,24 +121,41 @@ namespace StockScraper.Parsers
             foreach (XElement element in elements)
             {
                 var infoTableItem = new InfoTableItem(element, nameSpace);
-                AddShare(infoTableItem, filing);
+                ProccessShare(infoTableItem, filing);
             }
         }
 
-        private Share AddShare(InfoTableItem infoTableItem, Filing filing)
+        private Share ProccessShare(InfoTableItem infoTableItem, Filing filing)
         {
-            Security security = GetAndCacheSecurity(infoTableItem, filing);
-            if (security == null) return null;
+            Share share = null;
+            var securityHelper = new SecurityHelper();
+            Security security = FindSecurity(infoTableItem.NameOfIssuer, infoTableItem.Cusip);
 
+            if (security != null)
+            {
+                security = securityHelper.SaveSecurity(security);
+                securityHelper.SaveSecurityMap(security, infoTableItem.Cusip);
+                share = AddShare(infoTableItem, filing.FilingId, security.SecurityId);
+            }
+            else
+            {
+                securityHelper.AddUnknownShare(infoTableItem, filing.FilingId);
+            }
+
+            return share;
+        }
+
+        private Share AddShare(InfoTableItem infoTableItem, int filingId, int securityId)
+        {
             var db = new StockScraperEntities();
 
             var share = new Share
             {
-                FilingId = filing.FilingId,
+                FilingId = filingId,
                 Number = infoTableItem.NumberOfShares,
                 Type = infoTableItem.TypeOfShares,
                 Value = infoTableItem.Value,
-                SecurityId = security.SecurityId
+                SecurityId = securityId
             };
 
             db.Shares.Add(share);
@@ -147,23 +164,10 @@ namespace StockScraper.Parsers
             return share;
         }
 
-        private Security GetAndCacheSecurity(InfoTableItem infoTableItem, Filing filing)
+        private Security FindSecurity(string name, string cusip)
         {
             var securityHelper = new SecurityHelper();
-
-            Security security = securityHelper.CusipLookup(infoTableItem.Cusip) ?? securityHelper.NameLookup(infoTableItem.NameOfIssuer);
-
-            if (security != null)
-            {
-                security = securityHelper.AddSecurity(security);
-                securityHelper.GenerateSecurityMap(security, infoTableItem.Cusip);
-            } else
-            {
-                Console.WriteLine($"Unable to find security for {infoTableItem.NameOfIssuer}");
-                securityHelper.AddUnknownShare(infoTableItem, filing);
-            }
-
-            return security;
+            return securityHelper.CusipLookup(cusip) ?? securityHelper.NameLookup(name);
         }
     }
 }

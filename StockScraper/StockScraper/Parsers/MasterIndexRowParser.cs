@@ -9,10 +9,12 @@ namespace StockScraper.Parsers
     {
         private readonly StockScraperEntities _db = StockScraperEntitiesContext.Get();
 
-        internal void Parse(int masterIndexId, MasterIndexEntry indexEntry)
+        internal void Parse(MasterIndexEntry indexEntry)
         {
             Console.WriteLine($"Processing {indexEntry.FormType} for {indexEntry.CompanyName}");
+
             var hedgeFund = AddHedgeFund(indexEntry);
+            AddRegistration(hedgeFund, indexEntry.Cik);
 
             ProcessFiling(hedgeFund, indexEntry);
         }
@@ -31,8 +33,6 @@ namespace StockScraper.Parsers
                 _db.HedgeFunds.Add(hedgeFund);
                 _db.SaveChanges();
             }
-
-            AddRegistration(hedgeFund, indexEntry.Cik);
 
             return hedgeFund;
         }

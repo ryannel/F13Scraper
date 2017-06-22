@@ -8,7 +8,7 @@ DECLARE @SecondMasterIndex VARCHAR(15) = '2016 - QTR4'
 
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED
 
-select
+SELECT
 	HedgeFund.Name AS HedgeFundName,
 	Security.Name AS Security,
 	Security.Exchange,
