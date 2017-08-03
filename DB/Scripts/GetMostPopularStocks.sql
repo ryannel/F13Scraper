@@ -4,8 +4,8 @@ USE StockScraper
 -- Compare Hedgefund portfolio, quarter on quarter 
 ----
 
-DECLARE @FirstMasterIndex VARCHAR(15) = '2017 - QTR1'
-DECLARE @SecondMasterIndex VARCHAR(15) = '2016 - QTR4'
+DECLARE @FirstMasterIndex VARCHAR(15) = '2016 - QTR4'
+DECLARE @SecondMasterIndex VARCHAR(15) = '2016 - QTR3'
 
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED
 
@@ -14,6 +14,8 @@ SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED
 		Security.Name AS Security,
 		Security.Exchange,
 		Security.Symbol,
+		Security.Industry,
+		Security.Sector,
 		SUM(IIF(MasterIndex.Name = @FirstMasterIndex, CAST(share.Number AS BIGINT), 0)) AS FirstQuarter,
 		SUM(IIF(MasterIndex.Name = @SecondMasterIndex, CAST(share.Number AS BIGINT), 0)) AS SecondQuarter,
 		SUM(IIF(MasterIndex.Name = @FirstMasterIndex, CAST(share.Number AS BIGINT), 0)) AS NumberOfShares,
@@ -34,6 +36,8 @@ SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED
 		Security.Name,
 		Security.Exchange,
 		Security.Symbol,
+		Security.Industry,
+		Security.Sector,
 		HedgeFund.HedgeFundId
 )
 
@@ -41,10 +45,12 @@ SELECT
 	Movement.Security,
 	Movement.Exchange,
 	Movement.Symbol,
-	FORMAT(SUM(IIF(Movement.FirstQuarter > Movement.SecondQuarter AND Movement.SecondQuarter != 0, 1, 0)), '#,##') AS HedgeFundsIncreasing,
-	FORMAT(SUM(IIF(Movement.FirstQuarter < Movement.SecondQuarter, 1, 0)), '#,##') AS HedgeFundsDecreasing,
-	FORMAT(SUM(IIF(Movement.FirstQuarter > 0 AND Movement.SecondQuarter = 0, 1, 0)), '#,##') AS HedgeFundsEntering,
-	FORMAT(SUM(IIF(Movement.FirstQuarter = Movement.SecondQuarter, 1, 0)), '#,##') AS HedgeFundsHolding,
+	Movement.Industry,
+	Movement.Sector,
+	FORMAT(SUM(IIF(Movement.FirstQuarter > Movement.SecondQuarter AND Movement.SecondQuarter != 0, 1, 0)), '#,##0') AS HedgeFundsIncreasing,
+	FORMAT(SUM(IIF(Movement.FirstQuarter < Movement.SecondQuarter, 1, 0)), '#,##0') AS HedgeFundsDecreasing,
+	FORMAT(SUM(IIF(Movement.FirstQuarter > 0 AND Movement.SecondQuarter = 0, 1, 0)), '#,##0') AS HedgeFundsEntering,
+	FORMAT(SUM(IIF(Movement.FirstQuarter = Movement.SecondQuarter, 1, 0)), '#,##0') AS HedgeFundsHolding,
 	FORMAT(SUM(Movement.NumberOfShares), '$ #,##0.00') AS TotalNumberOfShares,
 	FORMAT(SUM(Movement.TotalValue), '$ #,##0.00') AS TotalValue
 FROM 
@@ -52,6 +58,8 @@ FROM
 GROUP BY
 	Movement.Security,
 	Movement.Exchange,
-	Movement.Symbol
+	Movement.Symbol,
+	Movement.Industry,
+	Movement.Sector
 ORDER BY
-	SUM(IIF(Movement.FirstQuarter > Movement.SecondQuarter AND Movement.SecondQuarter != 0, 1, 0)) DESC
+	SUM(IIF(Movement.FirstQuarter < Movement.SecondQuarter, 1, 0)) DESC

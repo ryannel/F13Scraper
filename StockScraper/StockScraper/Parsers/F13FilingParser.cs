@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using StockScraper.Models;
 using StockScraper.Utils;
@@ -101,12 +100,10 @@ namespace StockScraper.Parsers
 
             Console.WriteLine($"Processing: {infoTableElements.Count()} elements");
 
-            int i = 0;
-            int parts = 8;
+            var i = 0;
+            const int parts = 8;
 
-            var splits = from item in infoTableElements.AsParallel()
-                         group item by i++ % parts into part
-                         select part.AsEnumerable();
+            ParallelQuery<IEnumerable<XElement>> splits = infoTableElements.AsParallel().GroupBy(item => i++ % parts).Select(part => part.AsEnumerable());
 
             Task[] tasks = splits.Select(elements => Task.Factory.StartNew(() => ProcessShareBatch(elements, nameSpace, filing))).ToArray();
 

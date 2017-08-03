@@ -3,7 +3,7 @@
 ----
 
 DECLARE @HedgeFundId VARCHAR(255) = 'AJO, LP'
-DECLARE @MasterIndex VARCHAR(15) = '2017 - QTR1'
+DECLARE @MasterIndex VARCHAR(15) = '2016 - QTR4'
 
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED
 
@@ -12,7 +12,7 @@ select
 	Security.Name AS Security,
 	Security.Exchange,
 	Security.Symbol,
-	'$ ' + FORMAT(SUM(share.value), 'N2') AS Value
+	'$ ' + FORMAT(SUM(share.value) * 1000, 'N2') AS Value
 FROM 
 	HedgeFund
 	INNER JOIN Filing

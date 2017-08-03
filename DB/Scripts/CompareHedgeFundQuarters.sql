@@ -3,8 +3,8 @@
 ----
 
 DECLARE @HedgeFundName VARCHAR(255) = 'Appaloosa LP'
-DECLARE @FirstMasterIndex VARCHAR(15) = '2017 - QTR1'
-DECLARE @SecondMasterIndex VARCHAR(15) = '2016 - QTR4'
+DECLARE @FirstMasterIndex VARCHAR(15) = '2016 - QTR4'
+DECLARE @SecondMasterIndex VARCHAR(15) = '2016 - QTR3'
 
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED
 
@@ -16,9 +16,9 @@ SELECT
 	SUM(IIF(MasterIndex.Name = @FirstMasterIndex, share.Number, '0')) AS NumberFirstQuater,
 	SUM(IIF(MasterIndex.Name = @SecondMasterIndex, share.Number, '0')) AS NumberSecondQuater,
 	SUM(IIF(MasterIndex.Name = @FirstMasterIndex, share.Number, '0')) - SUM(IIF(MasterIndex.Name = @SecondMasterIndex, share.Number, '0')) AS NumberMovement,
-	'$ ' + FORMAT(SUM(IIF(MasterIndex.Name = @FirstMasterIndex, share.value, '0')), 'N2') AS ValueFirstQuater,
-	'$ ' + FORMAT(SUM(IIF(MasterIndex.Name = @SecondMasterIndex, share.value, '0')), 'N2') AS ValueSecondQuater,
-	'$ ' + FORMAT(SUM(IIF(MasterIndex.Name = @FirstMasterIndex, share.value, '0')) - SUM(IIF(MasterIndex.Name = @SecondMasterIndex, share.value, '0')), 'N2') AS ValueMovement
+	'$ ' + FORMAT(SUM(IIF(MasterIndex.Name = @FirstMasterIndex, share.value, '0')) * 1000, 'N2') AS ValueFirstQuater,
+	'$ ' + FORMAT(SUM(IIF(MasterIndex.Name = @SecondMasterIndex, share.value, '0')) * 1000, 'N2') AS ValueSecondQuater,
+	'$ ' + FORMAT((SUM(IIF(MasterIndex.Name = @FirstMasterIndex, share.value, '0')) - SUM(IIF(MasterIndex.Name = @SecondMasterIndex, share.value, '0'))) * 1000, 'N2') AS ValueMovement
 FROM 
 	HedgeFund
 	INNER JOIN Filing

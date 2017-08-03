@@ -9,8 +9,8 @@
         <EntityTypeShape EntityType="StockScraperModel.FormType" Width="1.5" PointX="4.5" PointY="8.5" />
         <EntityTypeShape EntityType="StockScraperModel.HedgeFund" Width="1.5" PointX="4.5" PointY="2.375" />
         <EntityTypeShape EntityType="StockScraperModel.MasterIndex" Width="1.5" PointX="2.625" PointY="4.875" />
-        <EntityTypeShape EntityType="StockScraperModel.Registration" Width="1.5" PointX="2.625" PointY="2.375" />
-        <EntityTypeShape EntityType="StockScraperModel.RegistrationAuthority" Width="1.875" PointX="0.5" PointY="2.375" />
+        <EntityTypeShape EntityType="StockScraperModel.Registration" Width="1.5" PointX="6.625" PointY="1.25" />
+        <EntityTypeShape EntityType="StockScraperModel.RegistrationAuthority" Width="1.875" PointX="8.625" PointY="1.625" />
         <EntityTypeShape EntityType="StockScraperModel.Security" Width="1.5" PointX="9" PointY="3.75" />
         <EntityTypeShape EntityType="StockScraperModel.SecurityMap" Width="1.5" PointX="11" PointY="3.75" />
         <EntityTypeShape EntityType="StockScraperModel.Share" Width="1.5" PointX="6.625" PointY="3.75" />
