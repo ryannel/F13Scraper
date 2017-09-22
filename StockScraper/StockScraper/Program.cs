@@ -10,7 +10,7 @@ namespace StockScraper
             var startTime = DateTime.Now;
             PrintStartMessage();
 
-            const string url = "https://www.sec.gov/Archives/edgar/full-index/2016/QTR4/master.zip";
+            const string url = "https://www.sec.gov/Archives/edgar/full-index/2017/QTR2/master.zip";
 
             new MasterIndexParser().Parse(url); 
 

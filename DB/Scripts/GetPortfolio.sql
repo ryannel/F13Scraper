@@ -12,7 +12,7 @@ select
 	Security.Name AS Security,
 	Security.Exchange,
 	Security.Symbol,
-	'$ ' + FORMAT(SUM(share.value) * 1000, 'N2') AS Value
+	SUM(share.value) * 1000 AS ValueUSD
 FROM 
 	HedgeFund
 	INNER JOIN Filing

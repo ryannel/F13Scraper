@@ -22,6 +22,7 @@ RML$Connector$MSSQL <- (function () {
 
         Execute <- function (connection) {
             return (function (query, cache) {
+                if (missing(cache)) cache = FALSE
                 result <- ExecuteQuery(connection, query, cache)
                 return(result)
             })
@@ -30,6 +31,7 @@ RML$Connector$MSSQL <- (function () {
         ExecuteFile <- function (connection) {
             return (function (filePath, cache) {
                 query <- readChar(filePath, file.info(filePath)$size)
+                if (missing(cache)) cache = FALSE
                 result <- ExecuteQuery(connection, query, cache)
                 return(result)
             })
@@ -42,7 +44,7 @@ RML$Connector$MSSQL <- (function () {
         }
 
         ExecuteQuery <- function (connection, query, cache) {
-            if (cache == FALSE) {
+            if (cache == FALSE || missing(cache)) {
                 return(sqlQuery(connection, query))
             }
 
